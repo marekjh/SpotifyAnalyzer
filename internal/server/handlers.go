@@ -7,10 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	AuthCookie  = "auth-cookie"
-	TokenCookie = "token-cookie"
-)
+const AuthCookie = "auth-cookie"
 
 func (s *Server) handleLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -40,5 +37,11 @@ func (s *Server) handleAuthResponse() gin.HandlerFunc {
 		}
 
 		s.updateTokenCache(c, token)
+	}
+}
+
+func (s *Server) handleMyAccount() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		
 	}
 }
