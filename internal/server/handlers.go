@@ -42,6 +42,13 @@ func (s *Server) handleAuthResponse() gin.HandlerFunc {
 
 func (s *Server) handleMyAccount() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		
+		user, err := s.SpotifyClient.CurrentUser(c.Request.Context())
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		c.JSON(http.StatusOK, user)
 	}
 }

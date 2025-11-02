@@ -8,5 +8,5 @@ func (s *Server) addRoutes() {
 	apiV1 := s.Engine.Group("/api/v1")
 	apiV1.Use(s.refreshToken())
 	
-	apiV1.GET("/myaccount", )
+	apiV1.GET("/myaccount", s.handleMyAccount())
 }
