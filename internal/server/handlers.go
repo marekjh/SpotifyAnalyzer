@@ -40,7 +40,7 @@ func (s *Server) handleCallback() gin.HandlerFunc {
 
 		s.updateTokenCache(c, token)
 
-		c.String(http.StatusOK, "You have authenticated to Spotify. You may now close this window.")
+		c.String(http.StatusOK, "You have successfully authenticated to Spotify. You may now close this window.")
 	}
 }
 
