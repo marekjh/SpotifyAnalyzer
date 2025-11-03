@@ -20,7 +20,7 @@ func (s *Server) handleLogin() gin.HandlerFunc {
 	}
 }
 
-func (s *Server) handleAuthResponse() gin.HandlerFunc {
+func (s *Server) handleCallback() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		state, err := c.Cookie(AuthCookie)
 		if err != nil {
