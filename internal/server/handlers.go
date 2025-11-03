@@ -106,3 +106,23 @@ func (s *Server) handleMyRecentTracks() gin.HandlerFunc {
 		c.JSON(http.StatusOK, recentTracks)
 	}
 }
+
+func (s *Server) handleMyDevices() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		client, err := retrieveSpotifyClient(c)
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		devices, err := client.PlayerDevices(c.Request.Context())
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		c.JSON(http.StatusOK, devices)
+	}
+}
