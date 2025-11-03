@@ -15,7 +15,7 @@ func (s *Server) authMiddleware() gin.HandlerFunc {
 		s.TokenCache.Mutex.RUnlock()
 
 		if !ok {
-			s.respondWithError(c, http.StatusUnauthorized, errors.New("please login to access the service"))
+			s.respondWithError(c, http.StatusUnauthorized, errors.New("please log in to access the service"))
 
 			return
 		}
