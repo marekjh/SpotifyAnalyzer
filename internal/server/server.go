@@ -26,7 +26,7 @@ type Server struct {
 type Env struct {
 	ClientID        string `env:"SPOTIFY_ID"`
 	ClientSecret    string `env:"SPOTIFY_SECRET"`
-	AuthRedirectURL string `env:"SPOTIFY_REDIRECT_URL" envDefault:"https://127.0.0.1/auth-response"`
+	AuthRedirectURL string `env:"SPOTIFY_REDIRECT_URL" envDefault:"http://127.0.0.1/callback"`
 }
 
 func NewServer(ctx context.Context) *Server {
