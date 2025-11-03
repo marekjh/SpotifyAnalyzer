@@ -11,6 +11,7 @@ import (
 	"github.com/zmb3/spotify/v2"
 	spotifyauth "github.com/zmb3/spotify/v2/auth"
 	"go.uber.org/zap"
+	"golang.org/x/oauth2"
 )
 
 type Server struct {
@@ -18,7 +19,7 @@ type Server struct {
 	Engine        *gin.Engine
 	EnvVars       *Env
 	Logger        *zap.SugaredLogger
-	TokenCache    TokenCache
+	TokenCache    *TokenCache
 	SpotifyClient *spotify.Client
 }
 
@@ -46,11 +47,16 @@ func NewServer(ctx context.Context) *Server {
 
 	sc := spotify.New(http.DefaultClient)
 
+	tokenCache := &TokenCache{
+		Data: make(map[string]*oauth2.Token),
+	}
+
 	s := &Server{
 		Authenticator: authenticator,
 		Engine:        engine,
 		EnvVars:       &envVars,
 		Logger:        logger.Sugar(),
+		TokenCache:    tokenCache,
 		SpotifyClient: sc,
 	}
 

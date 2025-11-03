@@ -16,7 +16,7 @@ const (
 
 type TokenCache struct {
 	Data  map[string]*oauth2.Token
-	Mutex *sync.RWMutex
+	Mutex sync.RWMutex
 }
 
 func (s *Server) updateTokenCache(c *gin.Context, token *oauth2.Token) {
@@ -27,7 +27,7 @@ func (s *Server) updateTokenCache(c *gin.Context, token *oauth2.Token) {
 
 func (s *Server) respondWithError(c *gin.Context, code int, err error) {
 	s.Logger.Error(err)
-	
+
 	c.AbortWithStatusJSON(code, gin.H{"Error": err})
 }
 
