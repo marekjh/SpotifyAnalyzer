@@ -28,7 +28,7 @@ func (s *Server) updateTokenCache(c *gin.Context, token *oauth2.Token) {
 func (s *Server) respondWithError(c *gin.Context, code int, err error) {
 	s.Logger.Error(err)
 
-	c.AbortWithStatusJSON(code, gin.H{"Error": err})
+	c.JSON(code, gin.H{"Error": err.Error()})
 }
 
 func setCookie(c *gin.Context, name, value string) {
