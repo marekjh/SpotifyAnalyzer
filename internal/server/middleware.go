@@ -36,9 +36,9 @@ func (s *Server) authMiddleware() gin.HandlerFunc {
 }
 
 type myRecentTracksRequest struct {
-	limit          int
-	beforeHoursAgo int64
-	afterHoursAgo  int64
+	Limit          int
+	BeforeHoursAgo int64
+	AfterHoursAgo  int64
 }
 
 func (s *Server) myRecentTracksMiddleware() gin.HandlerFunc {
