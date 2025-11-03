@@ -41,7 +41,7 @@ func NewServer(ctx context.Context) *Server {
 
 	authenticator := spotifyauth.New(spotifyauth.WithRedirectURL(envVars.AuthRedirectURL), spotifyauth.WithScopes(auth.Scopes...))
 
-	clientCache := &TokenCache{
+	tokenCache := &TokenCache{
 		Data: make(map[string]Subcache),
 	}
 
@@ -50,7 +50,7 @@ func NewServer(ctx context.Context) *Server {
 		Engine:        engine,
 		EnvVars:       &envVars,
 		Logger:        logger.Sugar(),
-		TokenCache:    clientCache,
+		TokenCache:    tokenCache,
 	}
 
 	s.addRoutes()
