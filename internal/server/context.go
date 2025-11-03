@@ -16,7 +16,11 @@ const (
 	Hour     = 3600
 )
 
-const SpotifyClient = "SpotifyClient"
+// Keys for objects living in gin.Context.Keys
+const (
+	SpotifyClient         = "SpotifyClient"
+	MyRecentTracksRequest = "MyRecentTracksRequest"
+)
 
 type TokenCache struct {
 	Data  map[string]Subcache
@@ -26,21 +30,6 @@ type TokenCache struct {
 type Subcache struct {
 	Token         *oauth2.Token
 	SpotifyClient *spotify.Client
-}
-
-func retrieveSpotifyClient(c *gin.Context) (*spotify.Client, error) {
-	value := c.Value(SpotifyClient)
-
-	client, ok := value.(*spotify.Client)
-	if !ok {
-		return nil, errors.New("failed to type assert spotify client")
-	}
-
-	return client, nil
-}
-
-func setSpotifyClient(c *gin.Context, client *spotify.Client) {
-	c.Set(SpotifyClient, client)
 }
 
 func (s *Server) updateTokenCache(c *gin.Context, token *oauth2.Token) {
@@ -60,4 +49,34 @@ func (s *Server) respondWithError(c *gin.Context, code int, err error) {
 
 func setCookie(c *gin.Context, name, value string) {
 	c.SetCookie(name, value, Hour, BasePath, Domain, true, false)
+}
+
+func retrieveSpotifyClient(c *gin.Context) (*spotify.Client, error) {
+	value := c.Value(SpotifyClient)
+
+	client, ok := value.(*spotify.Client)
+	if !ok {
+		return nil, errors.New("failed to type assert spotify client")
+	}
+
+	return client, nil
+}
+
+func setSpotifyClient(c *gin.Context, client *spotify.Client) {
+	c.Set(SpotifyClient, client)
+}
+
+func retrieveMyRecentTracksRequest(c *gin.Context) (*myRecentTracksRequest, error) {
+	value := c.Value(MyRecentTracksRequest)
+
+	req, ok := value.(*myRecentTracksRequest)
+	if !ok {
+		return nil, errors.New("failed to type assert my recent tracks request")
+	}
+
+	return req, nil
+}
+
+func setMyRecentTracksRequest(c *gin.Context, req *myRecentTracksRequest) {
+	c.Set(MyRecentTracksRequest, req)
 }

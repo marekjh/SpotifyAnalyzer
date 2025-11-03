@@ -3,8 +3,10 @@ package server
 import (
 	"crypto/rand"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/zmb3/spotify/v2"
 )
 
 const AuthCookie = "auth-cookie"
@@ -57,5 +59,48 @@ func (s *Server) handleMyAccount() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, user)
+	}
+}
+
+func (s *Server) handleMyRecentTracks() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		client, err := retrieveSpotifyClient(c)
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		req, err := retrieveMyRecentTracksRequest(c)
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		before := req.beforeHoursAgo
+		if req.beforeHoursAgo != 0 {
+			before = time.Now().Add(-time.Duration(req.beforeHoursAgo) * time.Hour).UnixMilli()
+		}
+
+		after := req.afterHoursAgo
+		if req.afterHoursAgo != 0 {
+			after = time.Now().Add(-time.Duration(req.afterHoursAgo) * time.Hour).UnixMilli()
+		}
+
+		opts := &spotify.RecentlyPlayedOptions{
+			Limit:         spotify.Numeric(req.limit),
+			BeforeEpochMs: before,
+			AfterEpochMs:  after,
+		}
+
+		recentTracks, err := client.PlayerRecentlyPlayedOpt(c.Request.Context(), opts)
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		c.JSON(http.StatusOK, recentTracks)
 	}
 }

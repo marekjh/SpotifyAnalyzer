@@ -8,4 +8,5 @@ func (s *Server) addRoutes() {
 	apiV1 := s.Engine.Group("/api/v1")
 	apiV1.Use(s.authMiddleware())
 	apiV1.GET("/myaccount", s.handleMyAccount())
+	apiV1.GET("/myrecenttracks", s.myRecentTracksMiddleware(), s.handleMyRecentTracks())
 }

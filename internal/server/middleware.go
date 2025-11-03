@@ -34,3 +34,24 @@ func (s *Server) authMiddleware() gin.HandlerFunc {
 		setSpotifyClient(c, cache.SpotifyClient)
 	}
 }
+
+type myRecentTracksRequest struct {
+	limit          int
+	beforeHoursAgo int64
+	afterHoursAgo  int64
+}
+
+func (s *Server) myRecentTracksMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req myRecentTracksRequest
+
+		err := c.ShouldBindQuery(&req)
+		if err != nil {
+			s.respondWithError(c, http.StatusBadRequest, err)
+
+			return
+		}
+
+		setMyRecentTracksRequest(c, &req)
+	}
+}
