@@ -78,18 +78,18 @@ func (s *Server) handleMyRecentTracks() gin.HandlerFunc {
 			return
 		}
 
-		before := req.beforeHoursAgo
-		if req.beforeHoursAgo != 0 {
-			before = time.Now().Add(-time.Duration(req.beforeHoursAgo) * time.Hour).UnixMilli()
+		before := req.BeforeHoursAgo
+		if req.BeforeHoursAgo != 0 {
+			before = time.Now().Add(-time.Duration(req.BeforeHoursAgo) * time.Hour).UnixMilli()
 		}
 
-		after := req.afterHoursAgo
-		if req.afterHoursAgo != 0 {
-			after = time.Now().Add(-time.Duration(req.afterHoursAgo) * time.Hour).UnixMilli()
+		after := req.AfterHoursAgo
+		if req.AfterHoursAgo != 0 {
+			after = time.Now().Add(-time.Duration(req.AfterHoursAgo) * time.Hour).UnixMilli()
 		}
 
 		opts := &spotify.RecentlyPlayedOptions{
-			Limit:         spotify.Numeric(req.limit),
+			Limit:         spotify.Numeric(req.Limit),
 			BeforeEpochMs: before,
 			AfterEpochMs:  after,
 		}
