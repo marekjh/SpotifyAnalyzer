@@ -3,15 +3,12 @@ package server
 import (
 	"context"
 	"log"
-	"net/http"
 
 	"github.com/caarlos0/env/v11"
 	"github.com/gin-gonic/gin"
 	"github.com/marekjh/spotifyanalyzer/internal/auth"
-	"github.com/zmb3/spotify/v2"
 	spotifyauth "github.com/zmb3/spotify/v2/auth"
 	"go.uber.org/zap"
-	"golang.org/x/oauth2"
 )
 
 type Server struct {
@@ -20,7 +17,6 @@ type Server struct {
 	EnvVars       *Env
 	Logger        *zap.SugaredLogger
 	TokenCache    *TokenCache
-	SpotifyClient *spotify.Client
 }
 
 type Env struct {
@@ -45,10 +41,8 @@ func NewServer(ctx context.Context) *Server {
 
 	authenticator := spotifyauth.New(spotifyauth.WithRedirectURL(envVars.AuthRedirectURL), spotifyauth.WithScopes(auth.Scopes...))
 
-	sc := spotify.New(http.DefaultClient)
-
-	tokenCache := &TokenCache{
-		Data: make(map[string]*oauth2.Token),
+	clientCache := &TokenCache{
+		Data: make(map[string]Subcache),
 	}
 
 	s := &Server{
@@ -56,8 +50,7 @@ func NewServer(ctx context.Context) *Server {
 		Engine:        engine,
 		EnvVars:       &envVars,
 		Logger:        logger.Sugar(),
-		TokenCache:    tokenCache,
-		SpotifyClient: sc,
+		TokenCache:    clientCache,
 	}
 
 	s.addRoutes()

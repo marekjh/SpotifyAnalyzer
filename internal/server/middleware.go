@@ -8,10 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Server) refreshToken() gin.HandlerFunc {
+func (s *Server) authMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		s.TokenCache.Mutex.RLock()
-		token, ok := s.TokenCache.Data[c.ClientIP()]
+		cache, ok := s.TokenCache.Data[c.ClientIP()]
 		s.TokenCache.Mutex.RUnlock()
 
 		if !ok {
@@ -20,16 +20,17 @@ func (s *Server) refreshToken() gin.HandlerFunc {
 			return
 		}
 
-		var err error
-		if token.Expiry.Before(time.Now()) {
-			token, err = s.Authenticator.RefreshToken(c.Request.Context(), token)
+		if cache.Token.Expiry.Before(time.Now()) {
+			token, err := s.Authenticator.RefreshToken(c.Request.Context(), cache.Token)
 			if err != nil {
 				s.respondWithError(c, http.StatusInternalServerError, err)
 
 				return
 			}
+
+			s.updateTokenCache(c, token)
 		}
 
-		s.updateTokenCache(c, token)
+		setSpotifyClient(c, cache.SpotifyClient)
 	}
 }

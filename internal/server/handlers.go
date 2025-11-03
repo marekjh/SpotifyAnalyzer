@@ -42,7 +42,14 @@ func (s *Server) handleCallback() gin.HandlerFunc {
 
 func (s *Server) handleMyAccount() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user, err := s.SpotifyClient.CurrentUser(c.Request.Context())
+		client, err := retrieveSpotifyClient(c)
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		user, err := client.CurrentUser(c.Request.Context())
 		if err != nil {
 			s.respondWithError(c, http.StatusInternalServerError, err)
 
