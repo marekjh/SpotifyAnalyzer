@@ -18,7 +18,7 @@ func (s *Server) handleLogin() gin.HandlerFunc {
 
 		setCookie(c, AuthCookie, state)
 
-		c.String(http.StatusOK, authURL)
+		c.Redirect(http.StatusTemporaryRedirect, authURL)
 	}
 }
 
