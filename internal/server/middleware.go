@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/zmb3/spotify/v2"
 )
 
 func (s *Server) authMiddleware() gin.HandlerFunc {
@@ -32,6 +33,21 @@ func (s *Server) authMiddleware() gin.HandlerFunc {
 		}
 
 		setSpotifyClient(c, cache.SpotifyClient)
+	}
+}
+
+func (s *Server) playMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req spotify.PlayOptions
+
+		err := c.ShouldBindQuery(&req)
+		if err != nil {
+			s.respondWithError(c, http.StatusBadRequest, err)
+
+			return
+		}
+
+		setPlayOptionsRequest(c, &req)
 	}
 }
 

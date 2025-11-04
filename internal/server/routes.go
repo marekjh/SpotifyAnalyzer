@@ -10,4 +10,5 @@ func (s *Server) addRoutes() {
 	apiV1.GET("/myaccount", s.handleMyAccount())
 	apiV1.GET("/myrecenttracks", s.myRecentTracksMiddleware(), s.handleMyRecentTracks())
 	apiV1.GET("/mydevices", s.handleMyDevices())
+	apiV1.PUT("/play", s.playMiddleware(), s.handlePlay())
 }

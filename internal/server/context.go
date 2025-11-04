@@ -20,6 +20,7 @@ const (
 const (
 	SpotifyClient         = "SpotifyClient"
 	MyRecentTracksRequest = "MyRecentTracksRequest"
+	PlayOptionsRequest    = "PlayOptionsRequest"
 )
 
 type TokenCache struct {
@@ -79,4 +80,19 @@ func retrieveMyRecentTracksRequest(c *gin.Context) (*myRecentTracksRequest, erro
 
 func setMyRecentTracksRequest(c *gin.Context, req *myRecentTracksRequest) {
 	c.Set(MyRecentTracksRequest, req)
+}
+
+func retrievePlayOptionsRequest(c *gin.Context) (*spotify.PlayOptions, error) {
+	value := c.Value(PlayOptionsRequest)
+
+	req, ok := value.(*spotify.PlayOptions)
+	if !ok {
+		return nil, errors.New("failed to type assert play options request")
+	}
+
+	return req, nil
+}
+
+func setPlayOptionsRequest(c *gin.Context, req *spotify.PlayOptions) {
+	c.Set(PlayOptionsRequest, req)
 }

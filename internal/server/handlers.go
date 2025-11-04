@@ -44,6 +44,34 @@ func (s *Server) handleCallback() gin.HandlerFunc {
 	}
 }
 
+func (s *Server) handlePlay() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		client, err := retrieveSpotifyClient(c)
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		opts, err := retrievePlayOptionsRequest(c)
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		err = client.PlayOpt(c.Request.Context(), opts)
+		if err != nil {
+			s.respondWithError(c, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		c.Status(http.StatusOK)
+	}
+
+}
+
 func (s *Server) handleMyAccount() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		client, err := retrieveSpotifyClient(c)
